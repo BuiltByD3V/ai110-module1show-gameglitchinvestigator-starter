@@ -1,34 +1,6 @@
 import random
 import streamlit as st
-from logic_utils import check_guess
-
-def get_range_for_difficulty(difficulty: str):
-    if difficulty == "Easy":
-        return 1, 20
-    if difficulty == "Normal":
-        return 1, 100
-    if difficulty == "Hard":
-        return 1, 50
-    return 1, 100
-
-
-def parse_guess(raw: str):
-    if raw is None:
-        return False, None, "Enter a guess."
-
-    if raw == "":
-        return False, None, "Enter a guess."
-
-    try:
-        if "." in raw:
-            value = int(float(raw))
-        else:
-            value = int(raw)
-    except Exception:
-        return False, None, "That is not a number."
-
-    return True, value, None
-
+from logic_utils import check_guess, get_range_for_difficulty, parse_guess
 
 def update_score(current_score: int, outcome: str, attempt_number: int):
     if outcome == "Win":
@@ -76,6 +48,13 @@ st.sidebar.caption(f"Attempts allowed: {attempt_limit}")
 if "secret" not in st.session_state:
     st.session_state.secret = random.randint(low, high)
 
+#FIX: Detect difficulty changes and regenerate secret in the new range
+if "last_difficulty" not in st.session_state:
+    st.session_state.last_difficulty = difficulty
+elif st.session_state.last_difficulty != difficulty:
+    st.session_state.secret = random.randint(low, high)
+    st.session_state.last_difficulty = difficulty
+
 #FIX: Initialize attempts to 0 so first guess counts as attempt 1
 if "attempts" not in st.session_state:
     st.session_state.attempts = 0
@@ -115,10 +94,12 @@ with col3:
 attempts_used = st.session_state.attempts + (1 if submit else 0)
 st.info(f"Guess a number between {low} and {high}. Attempts left: {attempt_limit - attempts_used}")
 
-#FIXME: This resets the secret number with a random number between 1 and 100 regardless of difficulty selected. The range for Easy and Hard are both ignored.
+#FIX: Use the selected difficulty's range instead of hardcoding 1-100
 if new_game:
     st.session_state.attempts = 0
-    st.session_state.secret = random.randint(1, 100)
+    st.session_state.secret = random.randint(low, high)
+    #FIX: Reset status to playing so the game unfreezes after a win or loss
+    st.session_state.status = "playing"
     st.success("New game started.")
     st.rerun()
 
