@@ -72,12 +72,13 @@ low, high = get_range_for_difficulty(difficulty)
 st.sidebar.caption(f"Range: {low} to {high}")
 st.sidebar.caption(f"Attempts allowed: {attempt_limit}")
 
-# FIXME: Secret number only generated once. If the user changes difficulty later, the secret is not regenerated in the range of the new difficulty.
+#FIXME: Secret number only generated once. If the user changes difficulty later, the secret is not regenerated in the range of the new difficulty.
 if "secret" not in st.session_state:
     st.session_state.secret = random.randint(low, high)
 
+#FIX: Initialize attempts to 0 so first guess counts as attempt 1
 if "attempts" not in st.session_state:
-    st.session_state.attempts = 1
+    st.session_state.attempts = 0
 
 if "score" not in st.session_state:
     st.session_state.score = 0
@@ -89,11 +90,6 @@ if "history" not in st.session_state:
     st.session_state.history = []
 
 st.subheader("Make a guess")
-
-st.info(
-    f"Guess a number between 1 and 100. "
-    f"Attempts left: {attempt_limit - st.session_state.attempts}"
-)
 
 with st.expander("Developer Debug Info"):
     st.write("Secret:", st.session_state.secret)
@@ -115,7 +111,11 @@ with col2:
 with col3:
     show_hint = st.checkbox("Show hint", value=True)
 
-# FIXME: This resets the secret number with a random number between 1 and 100 regardless of difficulty selected. The range for Easy and Hard are both ignored.
+#FIX: Show attempts left accounting for a press of Submit in this run
+attempts_used = st.session_state.attempts + (1 if submit else 0)
+st.info(f"Guess a number between {low} and {high}. Attempts left: {attempt_limit - attempts_used}")
+
+#FIXME: This resets the secret number with a random number between 1 and 100 regardless of difficulty selected. The range for Easy and Hard are both ignored.
 if new_game:
     st.session_state.attempts = 0
     st.session_state.secret = random.randint(1, 100)
@@ -138,7 +138,7 @@ if submit:
         st.session_state.history.append(raw_guess)
         st.error(err)
     else:
-        # FIX: Refactored logic into logic_utils.py using agent mode - ensures guess/secret comparison stays numeric and hints are always correct.
+        #FIX: Refactored logic into logic_utils.py using agent mode - ensures guess/secret comparison stays numeric and hints are always correct.
         st.session_state.history.append(guess_int)
 
         outcome, message = check_guess(guess_int, st.session_state.secret)
