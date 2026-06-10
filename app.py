@@ -89,6 +89,7 @@ low, high = get_range_for_difficulty(difficulty)
 st.sidebar.caption(f"Range: {low} to {high}")
 st.sidebar.caption(f"Attempts allowed: {attempt_limit}")
 
+# FIXME: Secret number only generated once. If the user changes difficulty later, the secret is not regenerated in the range of the new difficulty.
 if "secret" not in st.session_state:
     st.session_state.secret = random.randint(low, high)
 
@@ -131,6 +132,7 @@ with col2:
 with col3:
     show_hint = st.checkbox("Show hint", value=True)
 
+# FIXME: This resets the secret number with a random number between 1 and 100 regardless of difficulty selected. The range for Easy and Hard are both ignored.
 if new_game:
     st.session_state.attempts = 0
     st.session_state.secret = random.randint(1, 100)
@@ -153,6 +155,7 @@ if submit:
         st.session_state.history.append(raw_guess)
         st.error(err)
     else:
+        # FIXME: Sometimes the secret can be converted into a string before calling check_guess. This can result in the inconsistent comparison and flipping of the higher/lower feedback when guessing.
         st.session_state.history.append(guess_int)
 
         if st.session_state.attempts % 2 == 0:
