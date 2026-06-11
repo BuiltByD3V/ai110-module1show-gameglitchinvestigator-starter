@@ -56,4 +56,4 @@ tests\test_game_logic.py .................                                      
 ## 🚀 Stretch Features
 
 - [x] Challenge 4: Enhanced Game UI
-  Added structured feedback in `app.py` so the game now shows a Current Status section with score, attempts left, and difficulty. The hint output is clearer for high and low guesses, and the game displays a Round Summary table with the selected difficulty, active range, attempts used, attempts remaining, score, and current status.
+  Added structured feedback in `app.py` so the game shows a Current Status section with score, attempts left, and difficulty. The hint output is clearer for high and low guesses, and the game displays a Round Summary table with the selected difficulty, active range, attempts used, attempts remaining, score, and current status.
