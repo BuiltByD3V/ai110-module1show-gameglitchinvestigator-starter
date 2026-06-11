@@ -1,5 +1,12 @@
 def get_range_for_difficulty(difficulty: str):
-    """Return (low, high) inclusive range for a given difficulty."""
+    """Return the inclusive number range for a difficulty setting.
+
+    Args:
+        difficulty: The selected difficulty label from the Streamlit sidebar.
+
+    Returns:
+        A tuple containing the lowest and highest valid secret numbers.
+    """
     if difficulty == "Easy":
         return 1, 20
     if difficulty == "Normal":
@@ -10,10 +17,14 @@ def get_range_for_difficulty(difficulty: str):
 
 
 def parse_guess(raw: str):
-    """
-    Parse user input into an int guess.
+    """Convert raw user input into a whole-number guess.
 
-    Returns: (ok: bool, guess_int: int | None, error_message: str | None)
+    Args:
+        raw: The text entered by the player.
+
+    Returns:
+        A tuple of ``(ok, guess_int, error_message)``. ``ok`` is false when
+        the input is blank, non-numeric, or not a whole number.
     """
     if raw is None:
         return False, None, "Enter a guess."
@@ -33,7 +44,16 @@ def parse_guess(raw: str):
 
 
 def validate_guess_in_range(guess: int, low: int, high: int):
-    """Return whether a guess is inside the active inclusive range."""
+    """Check whether a guess is within the active difficulty range.
+
+    Args:
+        guess: The parsed whole-number guess.
+        low: The lowest allowed value for the current round.
+        high: The highest allowed value for the current round.
+
+    Returns:
+        A tuple of ``(is_valid, error_message)`` for UI-friendly validation.
+    """
     if guess < low or guess > high:
         return False, f"Guess must be between {low} and {high}."
 
@@ -41,7 +61,15 @@ def validate_guess_in_range(guess: int, low: int, high: int):
 
 
 def describe_guess_distance(guess: int, secret: int):
-    """Describe how close a guess was to the secret number."""
+    """Describe how close a guess is to the secret number.
+
+    Args:
+        guess: The player's valid guess.
+        secret: The current round's secret number.
+
+    Returns:
+        A short label for display in the guess history table.
+    """
     distance = abs(guess - secret)
 
     if distance == 0:
@@ -56,8 +84,25 @@ def describe_guess_distance(guess: int, secret: int):
     return "Far"
 
 
-def build_history_entry(attempt_number: int, guess: int, outcome: str, message: str, secret: int):
-    """Build a display-ready row for the guess history table."""
+def build_history_entry(
+    attempt_number: int,
+    guess: int,
+    outcome: str,
+    message: str,
+    secret: int,
+):
+    """Build a display-ready row for the guess history table.
+
+    Args:
+        attempt_number: The player's current attempt count.
+        guess: The player's valid guess.
+        outcome: The result returned by ``check_guess``.
+        message: The hint message returned by ``check_guess``.
+        secret: The current round's secret number.
+
+    Returns:
+        A dictionary whose keys become columns in Streamlit's history table.
+    """
     return {
         "Attempt": attempt_number,
         "Guess": guess,
@@ -68,13 +113,15 @@ def build_history_entry(attempt_number: int, guess: int, outcome: str, message: 
 
 
 def check_guess(guess, secret):
-    """
-    Compare guess to secret and return (outcome, message).
+    """Compare a player's guess with the secret number.
 
-    outcome examples: "Win", "Too High", "Too Low"
-    
-    #FIX: Moved here to fix the higher/lower bug - by centralizing the numeric comparison,
-    # we avoid the app accidentally converting secret to a string, which flipped the hints.
+    Args:
+        guess: The player's valid whole-number guess.
+        secret: The current round's secret number.
+
+    Returns:
+        A tuple of ``(outcome, message)`` where outcome is ``"Win"``,
+        ``"Too High"``, or ``"Too Low"``.
     """
     if guess == secret:
         return "Win", "🎉 Correct!"
@@ -86,5 +133,16 @@ def check_guess(guess, secret):
 
 
 def update_score(current_score: int, outcome: str, attempt_number: int):
-    """Update score based on outcome and attempt number."""
-    raise NotImplementedError("Refactor this function from app.py into logic_utils.py")
+    """Update the score for a guess outcome.
+
+    Args:
+        current_score: The player's score before the current guess.
+        outcome: The result of the current guess.
+        attempt_number: The one-based attempt number for the current guess.
+
+    Returns:
+        The updated score.
+    """
+    raise NotImplementedError(
+        "Refactor this function from app.py into logic_utils.py"
+    )

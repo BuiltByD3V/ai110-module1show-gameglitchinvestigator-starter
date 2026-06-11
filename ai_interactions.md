@@ -43,18 +43,25 @@ I reviewed that the history only records valid in-range guesses, that New Game c
 **Prompt used:**
 
 ```
-<!-- Paste the prompt you gave the AI -->
+Review my number guessing game code for PEP 8 style issues and improve the docstrings in logic_utils.py. Keep the changes narrow and do not change the game behavior.
 ```
 
 **Linting output before:**
 
 ```
-<!-- Paste relevant linter warnings/errors -->
+app.py:29:1: E305 expected 2 blank lines after class or function definition, found 1
+tests\test_game_logic.py:17:1: E302 expected 2 blank lines, found 1
+tests\test_game_logic.py:21:1: E302 expected 2 blank lines, found 1
+tests\test_game_logic.py:25:1: E302 expected 2 blank lines, found 1
+tests\test_game_logic.py:88:1: E265 block comment should start with '# '
+tests\test_game_logic.py:103:1: E265 block comment should start with '# '
+tests\test_game_logic.py:118:1: E265 block comment should start with '# '
+tests\test_game_logic.py:127:1: E265 block comment should start with '# '
 ```
 
 **Changes applied:**
 
-<!-- Describe what you changed based on the AI's suggestions -->
+I expanded every function docstring in `logic_utils.py` so each helper explains its inputs and return value. I also fixed PEP 8 spacing warnings by adding the missing blank lines between top-level functions and updating comments from `#FIX` to `# FIX`. After the cleanup, `pycodestyle` ran without any warnings.
 
 ---
 

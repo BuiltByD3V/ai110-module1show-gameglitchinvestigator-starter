@@ -8,6 +8,7 @@ from logic_utils import (
     validate_guess_in_range,
 )
 
+
 def update_score(current_score: int, outcome: str, attempt_number: int):
     if outcome == "Win":
         points = 100 - 10 * (attempt_number + 1)
@@ -24,6 +25,7 @@ def update_score(current_score: int, outcome: str, attempt_number: int):
         return current_score - 5
 
     return current_score
+
 
 st.set_page_config(page_title="Glitchy Guesser", page_icon="🎮")
 
@@ -50,18 +52,17 @@ low, high = get_range_for_difficulty(difficulty)
 st.sidebar.caption(f"Range: {low} to {high}")
 st.sidebar.caption(f"Attempts allowed: {attempt_limit}")
 
-#FIXME: Secret number only generated once. If the user changes difficulty later, the secret is not regenerated in the range of the new difficulty.
 if "secret" not in st.session_state:
     st.session_state.secret = random.randint(low, high)
 
-#FIX: Detect difficulty changes and regenerate secret in the new range
+# FIX: Detect difficulty changes and regenerate secret in the new range
 if "last_difficulty" not in st.session_state:
     st.session_state.last_difficulty = difficulty
 elif st.session_state.last_difficulty != difficulty:
     st.session_state.secret = random.randint(low, high)
     st.session_state.last_difficulty = difficulty
 
-#FIX: Initialize attempts to 0 so first guess counts as attempt 1
+# FIX: Initialize attempts to 0 so first guess counts as attempt 1
 if "attempts" not in st.session_state:
     st.session_state.attempts = 0
 
@@ -96,16 +97,19 @@ with col2:
 with col3:
     show_hint = st.checkbox("Show hint", value=True)
 
-#FIX: Show attempts left accounting for a press of Submit in this run
+# FIX: Show attempts left accounting for a press of Submit in this run
 attempts_used = st.session_state.attempts + (1 if submit else 0)
-st.info(f"Guess a number between {low} and {high}. Attempts left: {attempt_limit - attempts_used}")
+st.info(
+    f"Guess a number between {low} and {high}. "
+    f"Attempts left: {attempt_limit - attempts_used}"
+)
 
-#FIX: Use the selected difficulty's range instead of hardcoding 1-100
+# FIX: Use the selected difficulty's range instead of hardcoding 1-100
 if new_game:
     st.session_state.attempts = 0
     st.session_state.secret = random.randint(low, high)
     st.session_state.history = []
-    #FIX: Reset status to playing so the game unfreezes after a win or loss
+    # FIX: Reset status to playing so the game unfreezes after a win or loss
     st.session_state.status = "playing"
     st.success("New game started.")
     st.rerun()
@@ -130,7 +134,7 @@ if submit:
         if not in_range:
             st.error(range_err)
         else:
-            #FIX: Refactored logic into logic_utils.py using agent mode - ensures guess/secret comparison stays numeric and hints are always correct.
+            # FIX: Centralized numeric comparison keeps hints consistent.
             outcome, message = check_guess(guess_int, st.session_state.secret)
             st.session_state.history.append(
                 build_history_entry(
