@@ -40,6 +40,33 @@ def validate_guess_in_range(guess: int, low: int, high: int):
     return True, None
 
 
+def describe_guess_distance(guess: int, secret: int):
+    """Describe how close a guess was to the secret number."""
+    distance = abs(guess - secret)
+
+    if distance == 0:
+        return "Exact"
+
+    if distance <= 5:
+        return "Close"
+
+    if distance <= 15:
+        return "Warm"
+
+    return "Far"
+
+
+def build_history_entry(attempt_number: int, guess: int, outcome: str, message: str, secret: int):
+    """Build a display-ready row for the guess history table."""
+    return {
+        "Attempt": attempt_number,
+        "Guess": guess,
+        "Result": outcome,
+        "Hint": message,
+        "Distance": describe_guess_distance(guess, secret),
+    }
+
+
 def check_guess(guess, secret):
     """
     Compare guess to secret and return (outcome, message).

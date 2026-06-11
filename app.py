@@ -1,6 +1,7 @@
 import random
 import streamlit as st
 from logic_utils import (
+    build_history_entry,
     check_guess,
     get_range_for_difficulty,
     parse_guess,
@@ -103,6 +104,7 @@ st.info(f"Guess a number between {low} and {high}. Attempts left: {attempt_limit
 if new_game:
     st.session_state.attempts = 0
     st.session_state.secret = random.randint(low, high)
+    st.session_state.history = []
     #FIX: Reset status to playing so the game unfreezes after a win or loss
     st.session_state.status = "playing"
     st.success("New game started.")
@@ -121,19 +123,24 @@ if submit:
     ok, guess_int, err = parse_guess(raw_guess)
 
     if not ok:
-        st.session_state.history.append(raw_guess)
         st.error(err)
     else:
         in_range, range_err = validate_guess_in_range(guess_int, low, high)
 
         if not in_range:
-            st.session_state.history.append(guess_int)
             st.error(range_err)
         else:
             #FIX: Refactored logic into logic_utils.py using agent mode - ensures guess/secret comparison stays numeric and hints are always correct.
-            st.session_state.history.append(guess_int)
-
             outcome, message = check_guess(guess_int, st.session_state.secret)
+            st.session_state.history.append(
+                build_history_entry(
+                    attempt_number=st.session_state.attempts,
+                    guess=guess_int,
+                    outcome=outcome,
+                    message=message,
+                    secret=st.session_state.secret,
+                )
+            )
 
             if show_hint:
                 st.warning(message)
@@ -159,6 +166,10 @@ if submit:
                         f"The secret was {st.session_state.secret}. "
                         f"Score: {st.session_state.score}"
                     )
+
+if st.session_state.history:
+    st.subheader("Guess History")
+    st.table(st.session_state.history)
 
 st.divider()
 st.caption("Built by an AI that claims this code is production-ready.")

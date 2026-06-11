@@ -10,15 +10,15 @@
 
 **What task did you give the agent?**
 
-<!-- Describe the goal you asked the agent to accomplish -->
+I asked the agent to add a meaningful feature expansion to the guessing game: a Guess History section that records each valid guess, shows the result, and describes how close the guess was to the secret number.
 
 **What did the agent do?**
 
-<!-- List the steps the agent took (files edited, commands run, etc.) -->
+The agent first added pytest coverage for the new history helper functions. It then updated `logic_utils.py` with `describe_guess_distance()` and `build_history_entry()`, updated `app.py` so valid guesses are saved as structured history rows, reset history when New Game is clicked, and displayed the history with `st.table()`. Finally, it ran the test suite to confirm the game logic still passed.
 
 **What did you have to verify or fix manually?**
 
-<!-- Describe anything the agent got wrong or that required human review -->
+I reviewed that the history only records valid in-range guesses, that New Game clears the previous round's history, and that the table is easy to understand. I also checked the pytest output before committing the feature.
 
 ---
 

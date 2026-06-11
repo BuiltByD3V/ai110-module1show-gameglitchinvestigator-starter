@@ -1,7 +1,13 @@
 import sys
 import random
 import streamlit as st
-from logic_utils import check_guess, parse_guess, validate_guess_in_range
+from logic_utils import (
+    build_history_entry,
+    check_guess,
+    describe_guess_distance,
+    parse_guess,
+    validate_guess_in_range,
+)
 
 
 def test_winning_guess():
@@ -49,6 +55,34 @@ def test_validate_guess_rejects_extremely_large_number():
 def test_validate_guess_accepts_number_inside_range():
     result = validate_guess_in_range(42, 1, 100)
     assert result == (True, None)
+
+
+def test_describe_guess_distance_labels_close_guesses():
+    result = describe_guess_distance(47, 50)
+    assert result == "Close"
+
+
+def test_describe_guess_distance_labels_far_guesses():
+    result = describe_guess_distance(10, 50)
+    assert result == "Far"
+
+
+def test_build_history_entry_includes_attempt_guess_result_and_distance():
+    result = build_history_entry(
+        attempt_number=2,
+        guess=47,
+        outcome="Too Low",
+        message="Go HIGHER!",
+        secret=50,
+    )
+
+    assert result == {
+        "Attempt": 2,
+        "Guess": 47,
+        "Result": "Too Low",
+        "Hint": "Go HIGHER!",
+        "Distance": "Close",
+    }
 
 
 #FIX: Test that attempts is initialized to 0 after importing the app
