@@ -71,15 +71,15 @@ I expanded every function docstring in `logic_utils.py` so each helper explains 
 
 **Task given to both models:**
 
-<!-- Describe what you asked each model to do -->
+I asked both models: "My Streamlit number guessing game gives the wrong higher/lower hint. Here is the comparison logic. Please explain the bug and suggest a Pythonic fix that keeps the game logic easy to test."
 
 | | Model A | Model B |
 |-|---------|---------|
-| **Model name** | | |
-| **Response summary** | | |
-| **More Pythonic?** | | |
-| **Clearer explanation?** | | |
+| **Model name** | ChatGPT | GitHub Copilot |
+| **Response summary** | Recommended moving the guess comparison into a small helper function that returns a clear outcome and message, then testing that helper with pytest. | Suggested an inline fix near the Streamlit button logic and focused mostly on swapping the higher/lower messages. |
+| **More Pythonic?** | Yes. The helper-function approach made the logic easier to read, reuse, and test. | Somewhat. The suggested fix was short, but it kept more logic inside `app.py`. |
+| **Clearer explanation?** | Yes. It explained why centralizing the numeric comparison prevents the UI from accidentally flipping hints later. | The explanation was useful for the immediate bug, but less clear about why the structure mattered. |
 
 **Which did you prefer and why?**
 
-<!-- Your conclusion -->
+I preferred ChatGPT's answer because it explained both the fix and the reason behind the fix. Copilot was helpful for quickly spotting the area to change, but ChatGPT's version felt more readable and more "Pythonic" because it separated game logic from Streamlit UI code and made the behavior easier to verify with tests.
