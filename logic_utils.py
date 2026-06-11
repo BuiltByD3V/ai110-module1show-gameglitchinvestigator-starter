@@ -23,13 +23,21 @@ def parse_guess(raw: str):
 
     try:
         if "." in raw:
-            value = int(float(raw))
-        else:
-            value = int(raw)
+            return False, None, "Please enter a whole number."
+
+        value = int(raw)
     except Exception:
         return False, None, "That is not a number."
 
     return True, value, None
+
+
+def validate_guess_in_range(guess: int, low: int, high: int):
+    """Return whether a guess is inside the active inclusive range."""
+    if guess < low or guess > high:
+        return False, f"Guess must be between {low} and {high}."
+
+    return True, None
 
 
 def check_guess(guess, secret):

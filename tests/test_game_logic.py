@@ -1,7 +1,7 @@
 import sys
 import random
 import streamlit as st
-from logic_utils import check_guess
+from logic_utils import check_guess, parse_guess, validate_guess_in_range
 
 
 def test_winning_guess():
@@ -19,6 +19,36 @@ def test_guess_too_low():
 def test_guess_hint_uses_numeric_comparison():
     result = check_guess(51, 50)
     assert result == ("Too High", "📉 Go LOWER!")
+
+
+def test_parse_guess_rejects_blank_input():
+    result = parse_guess("")
+    assert result == (False, None, "Enter a guess.")
+
+
+def test_parse_guess_rejects_text_input():
+    result = parse_guess("banana")
+    assert result == (False, None, "That is not a number.")
+
+
+def test_parse_guess_rejects_decimal_input():
+    result = parse_guess("3.14")
+    assert result == (False, None, "Please enter a whole number.")
+
+
+def test_validate_guess_rejects_negative_number():
+    result = validate_guess_in_range(-5, 1, 100)
+    assert result == (False, "Guess must be between 1 and 100.")
+
+
+def test_validate_guess_rejects_extremely_large_number():
+    result = validate_guess_in_range(1000000, 1, 100)
+    assert result == (False, "Guess must be between 1 and 100.")
+
+
+def test_validate_guess_accepts_number_inside_range():
+    result = validate_guess_in_range(42, 1, 100)
+    assert result == (True, None)
 
 
 #FIX: Test that attempts is initialized to 0 after importing the app

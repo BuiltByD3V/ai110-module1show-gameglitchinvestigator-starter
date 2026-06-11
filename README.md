@@ -25,30 +25,40 @@ It wrote the code, ran away, and now the game is unplayable.
 
 ## 📝 Document Your Experience
 
-- [ ] Describe the game's purpose.
-- [ ] Detail which bugs you found.
-- [ ] Explain what fixes you applied.
+- [x] Describe the game's purpose.
+   This project is a number guessing game where the player tries to guess a secret number within a limited number of attempts. The game provides feedback after each guess and allows the player to choose different difficulty levels that change the number range.
+- [x] Detail which bugs you found.
+   While testing the game, I noticed that changing the difficulty did not always update the secret number correctly. I also found that the higher/lower hints were sometimes wrong even when the guess was clearly above or below the secret number. In addition, the attempt counter started with the wrong value, and the New Game button did not fully reset the game after a win or loss.
+- [x] Explain what fixes you applied.
+   Using GitHub Copilot to help analyze the code, I traced the issues to the difficulty handling, guess comparison logic, and game state management. I updated the game so secret numbers are generated within the selected difficulty range, corrected the higher/lower hint logic by centralizing the comparison code, fixed the attempt counter initialization, and ensured the New Game button properly resets the game state. I also added tests to verify the fixes and reduce the chance of future regressions.
 
 ## 📸 Demo Walkthrough
 
 Describe your fixed game in numbered steps so a reader can follow along without watching a video:
 
-1. <!-- Describe this step -->
-2. <!-- Describe this step -->
-3. <!-- Describe this step -->
-4. <!-- Describe this step -->
-5. <!-- Add more steps as needed -->
+1. Choose a difficulty level from the sidebar and note the number range shown for that mode.
+2. Enter your first guess in the input box and click Submit Guess.
+3. Use the hint you get, then keep guessing until you narrow down the secret number.
+4. Keep an eye on your attempts left and try to win before you run out.
+5. When the round ends, click New Game to start a fresh round and play again with the same difficulty or a different one.
 
 **Screenshot** *(optional)*: <!-- Insert a screenshot of your fixed, winning game here -->
 
 ## 🧪 Test Results
 
 ```
-# Paste your pytest output here, e.g.:
-# pytest tests/
-# ========================= X passed in 0.XXs =========================
+========================================================================================================= test session starts ==========================================================================================================
+platform win32 -- Python 3.14.4, pytest-9.0.3, pluggy-1.6.0
+rootdir: D:\CodePath\AI110\ai110-module1show-gameglitchinvestigator-starter
+plugins: anyio-4.13.0
+collected 14 items                                                                                                                                                                                                                      
+
+tests\test_game_logic.py ..............                                                                                                                                                                                           [100%]
+
+========================================================================================================== 14 passed in 0.35s ==========================================================================================================
+
 ```
 
 ## 🚀 Stretch Features
 
-- [ ] [If you choose to complete Challenge 4, describe the Enhanced UI changes here — a screenshot is optional]
+- [] [If you choose to complete Challenge 4, describe the Enhanced UI changes here — a screenshot is optional]

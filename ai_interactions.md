@@ -28,9 +28,11 @@
 
 | Edge Case | Prompt Used | AI-Suggested Test | Did It Pass? | Your Reasoning |
 |-----------|-------------|-------------------|--------------|----------------|
-| | | | | |
-| | | | | |
-| | | | | |
+| Blank input | Help me identify edge cases that could break my number guessing game, then generate pytest tests for those cases. | `test_parse_guess_rejects_blank_input` | Yes | A blank guess should not crash the game or get treated like a real attempt at comparing numbers. |
+| Text input | Generate a pytest case for a user typing a word instead of a number in my Streamlit guessing game. | `test_parse_guess_rejects_text_input` | Yes | The parser should return a friendly error instead of raising an exception. |
+| Decimal input | Add a test for decimal guesses, since the game expects whole numbers only. | `test_parse_guess_rejects_decimal_input` | Yes | A decimal like `3.14` should not be silently converted to `3`, because that could confuse the player. |
+| Negative number | Add a pytest case for guesses below the valid difficulty range. | `test_validate_guess_rejects_negative_number` | Yes | The active game range starts at 1, so negative guesses should be rejected with a clear range message. |
+| Extremely large number | Add a pytest case for a guess far above the maximum valid number. | `test_validate_guess_rejects_extremely_large_number` | Yes | Very large guesses should not break the game or produce misleading higher/lower hints. |
 
 ---
 

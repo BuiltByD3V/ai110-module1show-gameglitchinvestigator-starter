@@ -1,6 +1,11 @@
 import random
 import streamlit as st
-from logic_utils import check_guess, get_range_for_difficulty, parse_guess
+from logic_utils import (
+    check_guess,
+    get_range_for_difficulty,
+    parse_guess,
+    validate_guess_in_range,
+)
 
 def update_score(current_score: int, outcome: str, attempt_number: int):
     if outcome == "Win":
@@ -119,35 +124,41 @@ if submit:
         st.session_state.history.append(raw_guess)
         st.error(err)
     else:
-        #FIX: Refactored logic into logic_utils.py using agent mode - ensures guess/secret comparison stays numeric and hints are always correct.
-        st.session_state.history.append(guess_int)
+        in_range, range_err = validate_guess_in_range(guess_int, low, high)
 
-        outcome, message = check_guess(guess_int, st.session_state.secret)
-
-        if show_hint:
-            st.warning(message)
-
-        st.session_state.score = update_score(
-            current_score=st.session_state.score,
-            outcome=outcome,
-            attempt_number=st.session_state.attempts,
-        )
-
-        if outcome == "Win":
-            st.balloons()
-            st.session_state.status = "won"
-            st.success(
-                f"You won! The secret was {st.session_state.secret}. "
-                f"Final score: {st.session_state.score}"
-            )
+        if not in_range:
+            st.session_state.history.append(guess_int)
+            st.error(range_err)
         else:
-            if st.session_state.attempts >= attempt_limit:
-                st.session_state.status = "lost"
-                st.error(
-                    f"Out of attempts! "
-                    f"The secret was {st.session_state.secret}. "
-                    f"Score: {st.session_state.score}"
+            #FIX: Refactored logic into logic_utils.py using agent mode - ensures guess/secret comparison stays numeric and hints are always correct.
+            st.session_state.history.append(guess_int)
+
+            outcome, message = check_guess(guess_int, st.session_state.secret)
+
+            if show_hint:
+                st.warning(message)
+
+            st.session_state.score = update_score(
+                current_score=st.session_state.score,
+                outcome=outcome,
+                attempt_number=st.session_state.attempts,
+            )
+
+            if outcome == "Win":
+                st.balloons()
+                st.session_state.status = "won"
+                st.success(
+                    f"You won! The secret was {st.session_state.secret}. "
+                    f"Final score: {st.session_state.score}"
                 )
+            else:
+                if st.session_state.attempts >= attempt_limit:
+                    st.session_state.status = "lost"
+                    st.error(
+                        f"Out of attempts! "
+                        f"The secret was {st.session_state.secret}. "
+                        f"Score: {st.session_state.score}"
+                    )
 
 st.divider()
 st.caption("Built by an AI that claims this code is production-ready.")
