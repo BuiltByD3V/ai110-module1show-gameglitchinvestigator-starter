@@ -3,7 +3,7 @@
 ## 🚨 The Situation
 
 You asked an AI to build a simple "Number Guessing Game" using Streamlit.
-It wrote the code, ran away, and now the game is unplayable. 
+It wrote the code, ran away, and now the game is unplayable.
 
 - You can't win.
 - The hints lie to you.
@@ -47,18 +47,13 @@ Describe your fixed game in numbered steps so a reader can follow along without 
 ## 🧪 Test Results
 
 ```
-========================================================================================================= test session starts ==========================================================================================================
-platform win32 -- Python 3.14.4, pytest-9.0.3, pluggy-1.6.0
-rootdir: D:\CodePath\AI110\ai110-module1show-gameglitchinvestigator-starter
-plugins: anyio-4.13.0
-collected 14 items                                                                                                                                                                                                                      
+tests\test_game_logic.py .................                                                                                                                                                   [100%]
 
-tests\test_game_logic.py ..............                                                                                                                                                                                           [100%]
-
-========================================================================================================== 14 passed in 0.35s ==========================================================================================================
+======================================================================================= 17 passed in 0.35s ========================================================================================
 
 ```
 
 ## 🚀 Stretch Features
 
-- [] [If you choose to complete Challenge 4, describe the Enhanced UI changes here — a screenshot is optional]
+- [x] Challenge 4: Enhanced Game UI
+  Added structured feedback in `app.py` so the game now shows a Current Status section with score, attempts left, and difficulty. The hint output is clearer for high and low guesses, and the game displays a Round Summary table with the selected difficulty, active range, attempts used, attempts remaining, score, and current status.

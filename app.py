@@ -100,8 +100,8 @@ with col3:
 # FIX: Show attempts left accounting for a press of Submit in this run
 attempts_used = st.session_state.attempts + (1 if submit else 0)
 st.info(
-    f"Guess a number between {low} and {high}. "
-    f"Attempts left: {attempt_limit - attempts_used}"
+    f"Target range: {low} to {high}. "
+    f"Attempts after this turn: {max(attempt_limit - attempts_used, 0)}"
 )
 
 # FIX: Use the selected difficulty's range instead of hardcoding 1-100
@@ -147,7 +147,12 @@ if submit:
             )
 
             if show_hint:
-                st.warning(message)
+                if outcome == "Win":
+                    st.success(message)
+                elif outcome == "Too High":
+                    st.warning(f"{message} Your guess was above the secret.")
+                else:
+                    st.info(f"{message} Your guess was below the secret.")
 
             st.session_state.score = update_score(
                 current_score=st.session_state.score,
@@ -171,9 +176,32 @@ if submit:
                         f"Score: {st.session_state.score}"
                     )
 
+st.subheader("Current Status")
+status_col1, status_col2, status_col3 = st.columns(3)
+with status_col1:
+    st.metric("Score", st.session_state.score)
+with status_col2:
+    st.metric(
+        "Attempts Left",
+        max(attempt_limit - st.session_state.attempts, 0),
+    )
+with status_col3:
+    st.metric("Difficulty", difficulty)
+
 if st.session_state.history:
     st.subheader("Guess History")
     st.table(st.session_state.history)
+
+st.subheader("Round Summary")
+summary_data = {
+    "Difficulty": difficulty,
+    "Range": f"{low}-{high}",
+    "Attempts Used": st.session_state.attempts,
+    "Attempts Remaining": max(attempt_limit - st.session_state.attempts, 0),
+    "Score": st.session_state.score,
+    "Status": st.session_state.status.title(),
+}
+st.table([summary_data])
 
 st.divider()
 st.caption("Built by an AI that claims this code is production-ready.")
